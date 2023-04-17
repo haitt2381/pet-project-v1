@@ -3,27 +3,38 @@ package com.example.petproject.config;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.experimental.FieldDefaults;
 import org.keycloak.OAuth2Constants;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
+import org.keycloak.admin.client.resource.RealmResource;
+import org.keycloak.admin.client.resource.UsersResource;
+import org.keycloak.representations.idm.ClientRepresentation;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
+import java.util.Objects;
+
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Getter
+@Configuration
 public class KeycloakProvider {
 
     @Value("${keycloak.auth-server-url}")
-    public String serverURL;
+    String serverURL;
     @Value("${keycloak.realm}")
-    public String realm;
+    String realm;
     @Value("${keycloak.resource}")
-    public String clientID;
+    String clientID;
     @Value("${keycloak.credentials.secret}")
-    public String clientSecret;
+    String clientSecret;
 
-    private static Keycloak keycloak = null;
+    static Keycloak keycloak = null;
+    static UsersResource usersResource = null;
+    static RealmResource realmResource = null;
+    static ClientRepresentation clientRepresentation = null;
 
     public Keycloak getInstance() {
         if (keycloak == null) {
@@ -39,6 +50,28 @@ public class KeycloakProvider {
         return keycloak;
     }
 
+    public UsersResource getUsersResource() {
+        if(Objects.isNull(usersResource)) {
+            return this.getInstance().realm(realm).users();
+        }
+        return usersResource;
+    }
+
+    public RealmResource getRealmResource() {
+        if(Objects.isNull(realmResource)) {
+            return this.getInstance().realm(realm);
+        }
+        return realmResource;
+    }
+
+    public ClientRepresentation getClientRepresentation() {
+        if (Objects.isNull(clientRepresentation)) {
+            return this.getRealmResource()
+                    .clients().findByClientId(clientID)
+                    .get(0);
+        }
+        return clientRepresentation;
+    }
 
     public KeycloakBuilder newKeycloakBuilderWithPasswordCredentials(String username, String password) {
         return KeycloakBuilder.builder() //

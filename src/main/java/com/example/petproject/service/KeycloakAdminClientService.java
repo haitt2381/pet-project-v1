@@ -2,29 +2,31 @@ package com.example.petproject.service;
 
 import com.example.petproject.config.KeycloakProvider;
 import com.example.petproject.dto.CreateUserRequest;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+import org.keycloak.admin.client.CreatedResponseUtil;
+import org.keycloak.admin.client.resource.RealmResource;
+import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
+import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.ws.rs.core.Response;
 import java.util.Collections;
 
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Service
 public class KeycloakAdminClientService {
-    @Value("${keycloak.realm}")
-    public String realm;
-
-    private final KeycloakProvider kcProvider;
-
+    final KeycloakProvider kcProvider;
 
     public KeycloakAdminClientService(KeycloakProvider keycloakProvider) {
         this.kcProvider = keycloakProvider;
     }
 
     public int createKeycloakUser(CreateUserRequest user) {
-        UsersResource usersResource = kcProvider.getInstance().realm(realm).users();
+        UsersResource usersResource = kcProvider.getUsersResource();
         CredentialRepresentation credentialRepresentation = createPasswordCredentials(user.getPassword());
 
         UserRepresentation kcUser = new UserRepresentation();
@@ -39,6 +41,9 @@ public class KeycloakAdminClientService {
         Response response = usersResource.create(kcUser);
 
         if (response.getStatus() == 201) {
+            String userId = CreatedResponseUtil.getCreatedId(response);
+            addRealmRoleToUser(userId, user.getRoleName());
+
             //If you want to save the user to your other database, do it here, for example:
 //            User localUser = new User();
 //            localUser.setFirstName(kcUser.getFirstName());
@@ -62,5 +67,27 @@ public class KeycloakAdminClientService {
         return passwordCredentials;
     }
 
+    public void addRealmRoleToUser(String userId, String roleName){
+        // Get realm
+        RealmResource realmResource = kcProvider.getRealmResource();
+        UserResource userResource = this.getUserResourceById(userId);
+
+        String clientId = kcProvider.getClientRepresentation().getId();
+
+        RoleRepresentation realmRole = realmResource
+                .clients()
+                .get(clientId)
+                .roles()
+                .get(roleName)
+                .toRepresentation();
+
+        // Assign realm role to user
+        userResource.roles().clientLevel(clientId) //
+                .add(Collections.singletonList(realmRole));
+    }
+
+    public UserResource getUserResourceById(String userId) {
+        return kcProvider.getUsersResource().get(userId);
+    }
 
 }

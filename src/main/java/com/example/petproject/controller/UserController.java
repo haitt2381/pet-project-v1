@@ -4,6 +4,9 @@ import com.example.petproject.config.KeycloakProvider;
 import com.example.petproject.dto.CreateUserRequest;
 import com.example.petproject.dto.LoginRequest;
 import com.example.petproject.service.KeycloakAdminClientService;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.representations.AccessTokenResponse;
@@ -17,19 +20,15 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.BadRequestException;
 
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@AllArgsConstructor
 @Slf4j
 @RestController
 @RequestMapping("/user")
 public class UserController {
-    private final KeycloakAdminClientService kcAdminClient;
+    final KeycloakAdminClientService kcAdminClient;
 
-    private final KeycloakProvider kcProvider;
-
-    public UserController(KeycloakAdminClientService kcAdminClient, KeycloakProvider kcProvider) {
-        this.kcProvider = kcProvider;
-        this.kcAdminClient = kcAdminClient;
-    }
-
+    final KeycloakProvider kcProvider;
 
     @PostMapping(value = "/create")
     public ResponseEntity<Integer> createUser(@RequestBody CreateUserRequest user) {

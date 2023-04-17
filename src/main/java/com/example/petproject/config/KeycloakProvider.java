@@ -25,9 +25,6 @@ public class KeycloakProvider {
 
     private static Keycloak keycloak = null;
 
-    public KeycloakProvider() {
-    }
-
     public Keycloak getInstance() {
         if (keycloak == null) {
 
@@ -47,6 +44,7 @@ public class KeycloakProvider {
         return KeycloakBuilder.builder() //
                 .realm(realm) //
                 .serverUrl(serverURL)//
+                .grantType(OAuth2Constants.PASSWORD) //
                 .clientId(clientID) //
                 .clientSecret(clientSecret) //
                 .username(username) //

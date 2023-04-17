@@ -11,4 +11,5 @@ public class CreateUserRequest {
     String email;
     String firstname;
     String lastname;
+    String roleName;
 }

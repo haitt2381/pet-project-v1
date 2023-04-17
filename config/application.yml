@@ -15,3 +15,13 @@ spring:
   sql:
     init:
       platform: postgres
+
+keycloak:
+  auth-server-url: http://localhost:18080/auth
+  credentials:
+    secret: abe75335-9a99-45ed-b686-7561a6e8e0c9
+  realm: pet-project-realm
+  bearer-only: 'true'
+  use-resource-role-mappings: 'true'
+  ssl-required: none
+  resource: pet-project-client

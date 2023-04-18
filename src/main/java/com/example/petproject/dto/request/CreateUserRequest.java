@@ -1,4 +1,4 @@
-package com.example.petproject.dto;
+package com.example.petproject.dto.request;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,5 +11,6 @@ public class CreateUserRequest {
     String email;
     String firstname;
     String lastname;
-    String roleName;
+    String role;
+    String phoneNumber;
 }

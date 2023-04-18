@@ -1,8 +1,8 @@
-package com.example.petproject.dto;
+package com.example.petproject.dto.request;
 
-import lombok.Getter;
+import lombok.Data;
 
-@Getter
+@Data
 public class LoginRequest {
     String username;
     String password;

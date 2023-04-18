@@ -1,9 +1,11 @@
 package com.example.petproject.service;
 
 import com.example.petproject.config.KeycloakProvider;
-import com.example.petproject.dto.CreateUserRequest;
+import com.example.petproject.dto.request.CreateUserRequest;
 import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.CreatedResponseUtil;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.UserResource;
@@ -16,16 +18,14 @@ import org.springframework.stereotype.Service;
 import javax.ws.rs.core.Response;
 import java.util.Collections;
 
+@Slf4j
+@RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Service
 public class KeycloakAdminClientService {
     final KeycloakProvider kcProvider;
 
-    public KeycloakAdminClientService(KeycloakProvider keycloakProvider) {
-        this.kcProvider = keycloakProvider;
-    }
-
-    public int createKeycloakUser(CreateUserRequest user) {
+    public String createKeycloakUser(CreateUserRequest user) {
         UsersResource usersResource = kcProvider.getUsersResource();
         CredentialRepresentation credentialRepresentation = createPasswordCredentials(user.getPassword());
 
@@ -38,25 +38,14 @@ public class KeycloakAdminClientService {
         kcUser.setEnabled(true);
         kcUser.setEmailVerified(true);
 
-        Response response = usersResource.create(kcUser);
-
-        if (response.getStatus() == 201) {
+        try (Response response = usersResource.create(kcUser)) {
             String userId = CreatedResponseUtil.getCreatedId(response);
-            addRealmRoleToUser(userId, user.getRoleName());
-
-            //If you want to save the user to your other database, do it here, for example:
-//            User localUser = new User();
-//            localUser.setFirstName(kcUser.getFirstName());
-//            localUser.setLastName(kcUser.getLastName());
-//            localUser.setEmail(user.getEmail());
-//            localUser.setCreatedDate(Timestamp.from(Instant.now()));
-//            String userId = response.getLocation().getPath().replaceAll(".*/([^/]+)$", "$1");
-//            usersResource.get(userId).sendVerifyEmail();
-//            userRepository.save(localUser);
+            addRealmRoleToUser(userId, user.getRole());
+            return userId;
+        } catch (Exception ex) {
+            log.info(ex.toString());
         }
-
-        return response.getStatus();
-
+        return null;
     }
 
     private static CredentialRepresentation createPasswordCredentials(String password) {

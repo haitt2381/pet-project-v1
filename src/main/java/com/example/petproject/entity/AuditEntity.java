@@ -1,5 +1,6 @@
 package com.example.petproject.entity;
 
+import com.example.petproject.util.DateTimeUtils;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,8 +20,7 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Version;
-import java.util.Date;
-import java.util.Objects;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Data
@@ -50,15 +50,15 @@ public abstract class AuditEntity {
 
     @Column()
     @CreatedDate
-    Date createdAt;
+    OffsetDateTime createdAt;
 
     @Column()
     @LastModifiedDate
-    Date modifiedAt;
+    OffsetDateTime modifiedAt;
 
     @PrePersist
     void preInsert() {
-        this.createdAt = new Date();
+        this.createdAt = DateTimeUtils.nowToOffsetDateTime();
         this.modifiedAt = createdAt;
 //        this.createdBy = Objects.nonNull(ProfileLocal.getUserId()) ? ProfileLocal.getUserId() : null;
         this.version = 1L;
@@ -66,7 +66,7 @@ public abstract class AuditEntity {
 
     @PreUpdate
     void preUpdate() {
-        this.modifiedAt = new Date();
+        this.modifiedAt = DateTimeUtils.nowToOffsetDateTime();
 //        this.modifiedBy = Objects.nonNull(ProfileLocal.getUserId()) ? ProfileLocal.getUserId() : null;
     }
 }

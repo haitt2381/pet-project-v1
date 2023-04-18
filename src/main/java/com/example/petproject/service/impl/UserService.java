@@ -1,6 +1,6 @@
 package com.example.petproject.service.impl;
 
-import com.example.petproject.Util.CommonUtils;
+import com.example.petproject.util.CommonUtils;
 import com.example.petproject.dto.request.CreateUserRequest;
 import com.example.petproject.dto.response.IdResponse;
 import com.example.petproject.entity.User;

@@ -1,4 +1,4 @@
-package com.example.petproject.Util;
+package com.example.petproject.util;
 
 import com.example.petproject.dto.response.IdResponse;
 import lombok.experimental.UtilityClass;

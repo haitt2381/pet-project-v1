@@ -1,7 +1,10 @@
-package com.example.petproject.service;
+package com.example.petproject.service.impl;
 
 import com.example.petproject.config.KeycloakProvider;
+import com.example.petproject.constant.Role;
 import com.example.petproject.dto.request.CreateUserRequest;
+import com.example.petproject.exception.AppErrorInfo;
+import com.example.petproject.exception.AppRuntimeException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -16,6 +19,7 @@ import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.stereotype.Service;
 
 import javax.ws.rs.core.Response;
+import java.util.Arrays;
 import java.util.Collections;
 
 @Slf4j
@@ -39,11 +43,18 @@ public class KeycloakAdminClientService {
         kcUser.setEmailVerified(true);
 
         try (Response response = usersResource.create(kcUser)) {
-            String userId = CreatedResponseUtil.getCreatedId(response);
-            addRealmRoleToUser(userId, user.getRole());
-            return userId;
-        } catch (Exception ex) {
-            log.info(ex.toString());
+            if (response.getStatus() == 201) {
+                String userId = CreatedResponseUtil.getCreatedId(response);
+                String roleName = Arrays.stream(Role.values()).filter(role -> role.name().equals(user.getRole()))
+                        .findAny().orElseThrow()
+                        .getValue();
+
+                addRealmRoleToUser(userId, roleName);
+                return userId;
+            } else if (response.getStatus() == 409) {
+                throw new AppRuntimeException(AppErrorInfo.USER_ALREADY_EXISTS);
+            }
+
         }
         return null;
     }
@@ -56,7 +67,7 @@ public class KeycloakAdminClientService {
         return passwordCredentials;
     }
 
-    public void addRealmRoleToUser(String userId, String roleName){
+    public void addRealmRoleToUser(String userId, String roleName) {
         // Get realm
         RealmResource realmResource = kcProvider.getRealmResource();
         UserResource userResource = this.getUserResourceById(userId);

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.BadRequestException;
 
@@ -33,7 +34,7 @@ public class UserController {
     final UserService userService;
 
     @PostMapping(value = "/create")
-    public IdResponse createUser(@RequestBody CreateUserRequest request) {
+    public IdResponse createUser(@Valid @RequestBody CreateUserRequest request) {
         return userService.createUser(request);
     }
 

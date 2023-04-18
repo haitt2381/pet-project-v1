@@ -20,7 +20,7 @@ import javax.persistence.Table;
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table
+@Table(name = "app_user")
 public class User extends AuditEntity{
 
     @Column(nullable = false)

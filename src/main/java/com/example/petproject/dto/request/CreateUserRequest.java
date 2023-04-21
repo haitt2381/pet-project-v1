@@ -1,6 +1,6 @@
 package com.example.petproject.dto.request;
 
-import com.example.petproject.annotation.ValueOfEnum;
+import com.example.petproject.common.annotation.ValueOfEnum;
 import com.example.petproject.constant.Role;
 import lombok.Getter;
 import lombok.Setter;

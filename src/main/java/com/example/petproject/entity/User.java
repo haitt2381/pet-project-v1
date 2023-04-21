@@ -1,5 +1,6 @@
 package com.example.petproject.entity;
 
+import com.example.petproject.common.entity.AuditEntity;
 import com.example.petproject.constant.Role;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

@@ -1,7 +1,7 @@
-package com.example.petproject.exception;
+package com.example.petproject.common.exception;
 
-import com.example.petproject.dto.data.MessageInfo;
-import com.example.petproject.dto.data.ResponseInfo;
+import com.example.petproject.common.dto.MessageInfo;
+import com.example.petproject.common.dto.ResponseInfo;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;

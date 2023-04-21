@@ -1,4 +1,4 @@
-package com.example.petproject.util;
+package com.example.petproject.common.util;
 
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;

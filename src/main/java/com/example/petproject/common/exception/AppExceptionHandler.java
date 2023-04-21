@@ -1,8 +1,8 @@
-package com.example.petproject.exception;
+package com.example.petproject.common.exception;
 
-import com.example.petproject.dto.data.MessageInfo;
-import com.example.petproject.dto.data.ResponseInfo;
-import com.example.petproject.dto.response.BaseResponse;
+import com.example.petproject.common.dto.MessageInfo;
+import com.example.petproject.common.dto.ResponseInfo;
+import com.example.petproject.common.dto.BaseResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

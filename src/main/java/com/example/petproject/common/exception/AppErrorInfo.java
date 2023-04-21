@@ -1,4 +1,4 @@
-package com.example.petproject.exception;
+package com.example.petproject.common.exception;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

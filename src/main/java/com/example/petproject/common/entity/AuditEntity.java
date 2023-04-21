@@ -1,6 +1,6 @@
-package com.example.petproject.entity;
+package com.example.petproject.common.entity;
 
-import com.example.petproject.util.DateTimeUtils;
+import com.example.petproject.common.util.DateTimeUtils;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;

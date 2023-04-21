@@ -1,11 +1,12 @@
-package com.example.petproject.dto.data;
+package com.example.petproject.common.dto;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,11 +15,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Builder
-public class RequestInfo {
-//    String userId = .getUserId();
-    Integer page;
-    Integer size;
-    @Builder.Default
-    List<SortInfo> sortInfo = new ArrayList<>();
+@EqualsAndHashCode(callSuper = true)
+@SuperBuilder
+public class IdsResponse extends BaseResponse {
+    List<String> id = new ArrayList<>();
 }

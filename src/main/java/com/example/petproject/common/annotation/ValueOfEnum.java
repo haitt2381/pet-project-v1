@@ -1,4 +1,4 @@
-package com.example.petproject.annotation;
+package com.example.petproject.common.annotation;
 
 import javax.validation.Constraint;
 import javax.validation.ConstraintValidator;

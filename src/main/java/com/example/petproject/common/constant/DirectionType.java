@@ -1,4 +1,4 @@
-package com.example.petproject.constant;
+package com.example.petproject.common.constant;
 
 public enum DirectionType {
     UNSORTED(0), ASCENDING(1), DESCENDING(2);

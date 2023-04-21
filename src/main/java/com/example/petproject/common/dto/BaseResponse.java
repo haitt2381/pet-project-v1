@@ -1,6 +1,6 @@
-package com.example.petproject.dto.request;
+package com.example.petproject.common.dto;
 
-import com.example.petproject.dto.data.RequestInfo;
+import com.example.petproject.common.dto.ResponseInfo;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,6 +13,6 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @SuperBuilder
-public class BaseRequest {
-    RequestInfo requestInfoDTO;
+public class BaseResponse {
+    ResponseInfo responseInfo;
 }

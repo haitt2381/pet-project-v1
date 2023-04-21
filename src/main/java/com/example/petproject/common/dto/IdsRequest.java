@@ -1,18 +1,22 @@
-package com.example.petproject.dto.response;
+package com.example.petproject.common.dto;
 
-import com.example.petproject.dto.data.ResponseInfo;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
+
+@EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @SuperBuilder
-public class BaseResponse {
-    ResponseInfo responseInfo;
+public class IdsRequest extends BaseRequest {
+    List<String> ids;
+    String keyword;
 }

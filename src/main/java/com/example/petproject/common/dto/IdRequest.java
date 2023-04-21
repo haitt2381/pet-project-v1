@@ -1,4 +1,4 @@
-package com.example.petproject.dto.request;
+package com.example.petproject.common.dto;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

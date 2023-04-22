@@ -15,7 +15,7 @@ public enum AppErrorInfo {
     ENTITY_NOT_FOUND("ENTITY_NOT_FOUND", "Entity not found"),
 
     //Http error
-    FORBIDDEN("FORBIDDEN", "Forbidden"),
+    FORBIDDEN("FORBIDDEN", "User requires permission"),
     BAD_REQUEST("BAD_REQUEST", "Bad Request"),
     INTERNAL_SERVER_ERROR("INTERNAL_SERVER_ERROR", "Internal Server Error"),
     UNAUTHORIZED("UNAUTHORIZED", "Unauthorized"),

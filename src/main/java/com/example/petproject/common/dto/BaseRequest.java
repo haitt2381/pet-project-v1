@@ -1,6 +1,5 @@
 package com.example.petproject.common.dto;
 
-import com.example.petproject.common.dto.RequestInfo;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;

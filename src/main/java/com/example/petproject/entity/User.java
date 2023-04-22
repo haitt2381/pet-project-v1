@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,7 +24,9 @@ import javax.persistence.Table;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "app_user")
-public class User extends AuditEntity{
+@SQLDelete(sql = "Update app_user SET is_deleted = true, modified_at = now(), version = version + 1 WHERE id = ? and version = ?")
+@Where(clause = "is_deleted = false")
+public class User extends AuditEntity {
 
     @Column(nullable = false)
     String firstname;

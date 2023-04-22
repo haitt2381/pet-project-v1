@@ -30,7 +30,7 @@ spring:
 keycloak:
   auth-server-url: http://localhost:18080/auth/
   credentials:
-    secret: 3a00631f-0729-4693-b4f6-8858b7a7e441
+    secret: 'Get new secret key in credentials tab'
   realm: pet-project-realm
   bearer-only: 'true'
   use-resource-role-mappings: 'true'

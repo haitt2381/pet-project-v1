@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
 public class LoginRequest {
 
     @ApiModelProperty(example = "admin", required = true)
-    @NotBlank(message = "Username cannot be blank")
+    @NotBlank
     String username;
 
     @ApiModelProperty(example = "admin", required = true)

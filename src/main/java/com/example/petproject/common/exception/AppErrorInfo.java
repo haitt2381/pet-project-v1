@@ -26,6 +26,10 @@ public enum AppErrorInfo {
     CANNOT_CREATE_USER_KEYCLOAK("CANNOT_CREATE_USER_KEYCLOAK", "Cannot create user keycloak"),
     USER_ALREADY_EXISTS("USER_ALREADY_EXISTS", "User already exists"),
 
+    //Authentication
+    INVALID_CREDENTIALS("INVALID_CREDENTIALS","Username or password are incorrect"),
+    EMAIL_NOT_VERIFIED("EMAIL_NOT_VERIFIED", "User probably hasn't verified email"),
+
     //Size upload file
     MAXIMUM_UPLOAD_SIZE_EXCEEDED("MAXIMUM_UPLOAD_SIZE_EXCEEDED", "Maximum upload size exceeded"),
 

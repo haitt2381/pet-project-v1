@@ -73,7 +73,7 @@ public class KeycloakProvider {
         return clientRepresentation;
     }
 
-    public KeycloakBuilder newKeycloakBuilderWithPasswordCredentials(String username, String password) {
+    public Keycloak newKeycloakBuilderWithPasswordCredentials(String username, String password) {
         return KeycloakBuilder.builder() //
                 .realm(realm) //
                 .serverUrl(serverURL)//
@@ -81,7 +81,8 @@ public class KeycloakProvider {
                 .clientId(clientID) //
                 .clientSecret(clientSecret) //
                 .username(username) //
-                .password(password);
+                .password(password)
+                .build();
     }
 
     public JsonNode refreshToken(String refreshToken) throws UnirestException {

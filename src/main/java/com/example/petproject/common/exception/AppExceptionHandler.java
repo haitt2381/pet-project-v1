@@ -8,6 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -27,7 +28,10 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
                                                                   HttpHeaders headers, HttpStatus status, WebRequest request) {
         logger.error("MethodArgumentNotValidException", ex);
         List<MessageInfo> errors = ex.getBindingResult().getFieldErrors().stream()
-                .map(error -> MessageInfo.builder().code(error.getField()).message(error.getDefaultMessage()).build())
+                .map(error -> MessageInfo.builder()
+                        .code(AppErrorInfo.BAD_REQUEST.getCode())
+                        .message(StringUtils.capitalize(error.getField()) + " " + error.getDefaultMessage())
+                        .build())
                 .collect(Collectors.toList());
         ResponseInfo responseInfo = ResponseInfo.builder().errors(errors).build();
         return new ResponseEntity<>(BaseResponse.builder().responseInfo(responseInfo).build(), HttpStatus.BAD_REQUEST);

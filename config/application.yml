@@ -9,17 +9,17 @@ spring:
           starttls:
             enable: 'true'
           auth: 'true'
-    host: smtp.gmail.com
-    username: petproject2381@gmail.com
-    password: wwxyjknjjbbairyl
-    port: '587'
+    host: sandbox.smtp.mailtrap.io
+    username: e4dafac341bbfc
+    password: bd88954c0017df
+    port: '2525'
   jpa:
     database: POSTGRESQL
     show-sql: true
     hibernate:
       ddl-auto: update
   datasource:
-    url: jdbc:postgresql://localhost:5432/pet-project
+    url: jdbc:postgresql://localhost:5434/pet-project
     username: postgres
     password: postgres
     driverClassName: org.postgresql.Driver

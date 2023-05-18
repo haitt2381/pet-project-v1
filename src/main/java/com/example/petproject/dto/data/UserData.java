@@ -15,8 +15,8 @@ import lombok.experimental.FieldDefaults;
 @Builder
 public class UserData {
     String id;
-    String firstname;
-    String lastname;
+    String firstName;
+    String lastName;
     String username;
     String email;
     String userKeycloakId;

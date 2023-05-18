@@ -14,6 +14,7 @@ import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.representations.AccessToken;
 import org.keycloak.representations.AccessTokenResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,15 +42,17 @@ public class AuthenticationService implements IAuthenticationService {
 
     @Override
     public AccessTokenResponse login(LoginRequest request) {
+        userService.isActiveUser(request.getUsername());
+
         try(Keycloak keycloak =
                     kcProvider.newKeycloakBuilderWithPasswordCredentials(request.getUsername(), request.getPassword())) {
             return keycloak.tokenManager().getAccessToken();
         } catch (NotAuthorizedException ex) {
-            log.warn("Invalid account", ex);
-            throw new AppRuntimeException(AppErrorInfo.INVALID_CREDENTIALS);
+            log.info("[AuthService] Invalid account", ex);
+            throw new AppRuntimeException(AppErrorInfo.INVALID_CREDENTIALS, HttpStatus.FORBIDDEN);
         } catch (BadRequestException ex) {
-            log.warn("invalid account. User probably hasn't verified email.", ex);
-            throw new AppRuntimeException(AppErrorInfo.FORBIDDEN);
+            log.info("[AuthService] User probably hasn't active", ex);
+            throw new AppRuntimeException(AppErrorInfo.USER_NOT_ACTIVE, HttpStatus.FORBIDDEN);
         }
 
     }
@@ -58,6 +61,7 @@ public class AuthenticationService implements IAuthenticationService {
         UserData currentUser = getCurrentUser();
         UserResource userResource = kcProvider.getUsersResource().get(currentUser.getUserKeycloakId());
         userResource.logout();
+        kcProvider.getRealmResource().logoutAll();
     }
 
 

@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -26,13 +27,14 @@ import javax.persistence.Table;
 @Table(name = "app_user")
 @SQLDelete(sql = "Update app_user SET is_deleted = true, modified_at = now(), version = version + 1 WHERE id = ? and version = ?")
 @Where(clause = "is_deleted = false")
+@DynamicUpdate
 public class User extends AuditEntity {
 
     @Column(nullable = false)
-    String firstname;
+    String firstName;
 
     @Column(nullable = false)
-    String lastname;
+    String lastName;
 
     @Column(unique = true, nullable = false)
     String username;

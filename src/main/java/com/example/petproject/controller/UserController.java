@@ -3,6 +3,7 @@ package com.example.petproject.controller;
 import com.example.petproject.common.dto.IdResponse;
 import com.example.petproject.dto.request.CreateUserRequest;
 import com.example.petproject.dto.request.GetUsersRequest;
+import com.example.petproject.dto.request.UpdateUserRequest;
 import com.example.petproject.dto.response.GetUsersResponse;
 import com.example.petproject.service.IUserService;
 import io.swagger.annotations.Api;
@@ -12,7 +13,10 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,4 +47,26 @@ public class UserController {
     public IdResponse createUser(@Valid @RequestBody CreateUserRequest request) {
         return userService.createUser(request);
     }
+
+    @ApiOperation(value = "Activate user")
+    @RolesAllowed("ROLE_admin")
+    @GetMapping(value = "/activate/{emailOrUsername}")
+    public IdResponse activateUser(@PathVariable String emailOrUsername) {
+        return userService.activateAndDeactivateUser(emailOrUsername, true);
+    }
+
+    @ApiOperation(value = "Deactivate user")
+    @RolesAllowed("ROLE_admin")
+    @GetMapping(value = "/deactivate/{emailOrUsername}")
+    public IdResponse deactivateUser(@PathVariable String emailOrUsername) {
+        return userService.activateAndDeactivateUser(emailOrUsername, false);
+    }
+
+    @ApiOperation(value = "Update user")
+    @RolesAllowed("ROLE_admin")
+    @PutMapping(value = "/update")
+    public IdResponse updateUser(@Valid @RequestBody UpdateUserRequest request) {
+        return userService.updateUser(request);
+    }
+
 }

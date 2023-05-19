@@ -16,9 +16,9 @@ public abstract class UserSpecification extends BaseSpecification {
             String searchText = getSearchText(keyword);
 
             return criteriaBuilder.or(
-                    criteriaBuilder.like(criteriaBuilder.concat(criteriaBuilder.lower(root.get("firstname")), criteriaBuilder.lower(root.get("lastname"))), searchText),
-                    criteriaBuilder.like(criteriaBuilder.lower(root.get("firstname")), searchText),
-                    criteriaBuilder.like(criteriaBuilder.lower(root.get("lastname")), searchText),
+                    criteriaBuilder.like(criteriaBuilder.concat(criteriaBuilder.lower(root.get("firstName")), criteriaBuilder.lower(root.get("lastName"))), searchText),
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("firstName")), searchText),
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("lastName")), searchText),
                     criteriaBuilder.like(criteriaBuilder.lower(root.get("username")), searchText),
                     criteriaBuilder.like(criteriaBuilder.lower(root.get("email")), searchText),
                     criteriaBuilder.like(criteriaBuilder.lower(root.get("phoneNumber")), searchText)

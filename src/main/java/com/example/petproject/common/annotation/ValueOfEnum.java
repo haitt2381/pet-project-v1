@@ -1,15 +1,10 @@
 package com.example.petproject.common.annotation;
 
 import javax.validation.Constraint;
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
 import javax.validation.Payload;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.ElementType.CONSTRUCTOR;
@@ -28,24 +23,4 @@ public @interface ValueOfEnum {
     String message() default "must be any of enum {enumClass}";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
-}
-
-class ValueOfEnumValidator implements ConstraintValidator<ValueOfEnum, CharSequence> {
-    private List<String> acceptedValues;
-
-    @Override
-    public void initialize(ValueOfEnum annotation) {
-        acceptedValues = Stream.of(annotation.enumClass().getEnumConstants())
-                .map(Enum::name)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public boolean isValid(CharSequence value, ConstraintValidatorContext context) {
-        if (value == null) {
-            return true;
-        }
-
-        return acceptedValues.contains(value.toString());
-    }
 }

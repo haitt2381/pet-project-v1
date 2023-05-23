@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.time.OffsetDateTime;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,6 +17,8 @@ import lombok.experimental.FieldDefaults;
 @Builder
 public class UserData {
     String id;
+    OffsetDateTime createdAt;
+    OffsetDateTime modifiedAt;
     String firstName;
     String lastName;
     String username;

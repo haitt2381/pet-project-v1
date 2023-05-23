@@ -42,7 +42,6 @@ public class AuthenticationService implements IAuthenticationService {
 
     @Override
     public AccessTokenResponse login(LoginRequest request) {
-        userService.isActiveUser(request.getUsername());
 
         try(Keycloak keycloak =
                     kcProvider.newKeycloakBuilderWithPasswordCredentials(request.getUsername(), request.getPassword())) {

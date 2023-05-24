@@ -15,6 +15,7 @@ import lombok.experimental.SuperBuilder;
 public class GetUsersRequest extends BaseRequest {
     @ApiModelProperty(notes = "Any keyword for search name, username, email, phoneNumber")
     String keyword;
+    String role;
     Boolean isActive;
     Boolean isDeleted;
 }

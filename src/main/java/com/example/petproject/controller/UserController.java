@@ -4,6 +4,7 @@ import com.example.petproject.common.dto.IdResponse;
 import com.example.petproject.dto.request.CreateUserRequest;
 import com.example.petproject.dto.request.GetUsersRequest;
 import com.example.petproject.dto.request.UpdateUserRequest;
+import com.example.petproject.dto.response.GetUserResponse;
 import com.example.petproject.dto.response.GetUsersResponse;
 import com.example.petproject.service.IUserService;
 import io.swagger.annotations.Api;
@@ -32,8 +33,15 @@ public class UserController {
     @ApiOperation(value = "Get list user")
     @RolesAllowed("ROLE_moderator")
     @PostMapping("/list")
-    public GetUsersResponse getUser(@RequestBody @ApiParam("Request body") GetUsersRequest request) {
+    public GetUsersResponse getUsers(@RequestBody @ApiParam("Request body") GetUsersRequest request) {
         return userService.getUsers(request);
+    }
+
+    @ApiOperation(value = "Get user detail")
+    @RolesAllowed("ROLE_admin")
+    @GetMapping("/{id}")
+    public GetUserResponse getUser(@PathVariable String id) {
+        return userService.getUser(id);
     }
 
     @ApiOperation(value = "Create user")

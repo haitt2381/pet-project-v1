@@ -14,6 +14,8 @@ public enum AppErrorInfo {
     ID_CANNOT_BE_NULL("ID_CANNOT_BE_NULL", "Id can't be null"),
     ENTITY_NOT_FOUND("ENTITY_NOT_FOUND", "Entity not found"),
     INVALID("INVALID", "invalid"),
+    UUID_INVALID("UUID_INVALID", "Invalid id, please try again"),
+
 
     //Http error
     FORBIDDEN("FORBIDDEN", "User requires permission"),

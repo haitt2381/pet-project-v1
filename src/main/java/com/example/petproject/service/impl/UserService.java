@@ -9,6 +9,7 @@ import com.example.petproject.dto.data.UserData;
 import com.example.petproject.dto.request.CreateUserRequest;
 import com.example.petproject.dto.request.GetUsersRequest;
 import com.example.petproject.dto.request.UpdateUserRequest;
+import com.example.petproject.dto.response.GetUserResponse;
 import com.example.petproject.dto.response.GetUsersResponse;
 import com.example.petproject.entity.User;
 import com.example.petproject.mapper.UserMapper;
@@ -52,6 +53,14 @@ public class UserService implements IUserService {
                 .responseInfo(CommonUtils.toResponseInfo(users))
                 .data(userMapper.toListUserData(users.getContent()))
                 .build();
+    }
+
+    @Override
+    public GetUserResponse getUser(String id) {
+        UUID uuid = CommonUtils.isValidUUID(id);
+        User user = this.getUserById(uuid);
+        UserData userDto = userMapper.toUserData(user);
+        return GetUserResponse.builder().data(userDto).build();
     }
 
     @Override

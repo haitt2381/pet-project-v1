@@ -2,6 +2,8 @@ package com.example.petproject.common.util;
 
 import com.example.petproject.common.dto.IdResponse;
 import com.example.petproject.common.dto.ResponseInfo;
+import com.example.petproject.common.exception.AppErrorInfo;
+import com.example.petproject.common.exception.AppRuntimeException;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -21,5 +23,13 @@ public class CommonUtils {
                 .size(page.getSize())
                 .total(page.getTotalElements())
                 .build();
+    }
+
+    public static UUID isValidUUID(String id) {
+        try {
+            return UUID.fromString(id);
+        } catch (Exception ex) {
+            throw new AppRuntimeException(AppErrorInfo.UUID_INVALID);
+        }
     }
 }

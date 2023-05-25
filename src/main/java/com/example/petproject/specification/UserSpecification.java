@@ -5,15 +5,26 @@ import com.example.petproject.constant.Role;
 import com.example.petproject.dto.request.GetUsersRequest;
 import com.example.petproject.entity.User;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.util.StringUtils;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public abstract class UserSpecification extends BaseSpecification {
 
     public static Specification<User> buildSpecification(GetUsersRequest request) {
         Specification<User> specification = containsKeyword(request.getKeyword());
-        if (StringUtils.hasText(request.getRole())) {
+
+        if (!CollectionUtils.isEmpty(request.getRole())) {
             specification = specification.and(hasRole(request.getRole()));
         }
+
+        if (Objects.nonNull(request.getIsActive())) {
+            specification = specification.and(isActive(request.getIsActive()));
+        }
+
         return specification;
     }
 
@@ -32,11 +43,13 @@ public abstract class UserSpecification extends BaseSpecification {
         };
     }
 
-    public static Specification<User> hasRole(String roleName) {
-        Role role = Role.valueOf(roleName);
-        return (root, query, criteriaBuilder) -> criteriaBuilder.and(
-                criteriaBuilder.equal(root.get("role"), role)
-        );
+    public static Specification<User> hasRole(List<String> roleNames) {
+        Set<Role> rolesQuery = roleNames.stream().map(Role::valueOf).collect(Collectors.toSet());
+        return (root, query, criteriaBuilder) -> criteriaBuilder.and(root.get("role").in(rolesQuery));
+    }
+
+    public static Specification<User> isActive(boolean isActive) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("isActive"), isActive);
     }
 
 

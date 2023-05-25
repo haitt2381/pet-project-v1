@@ -3,6 +3,7 @@ package com.example.petproject.common.util;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 
@@ -17,8 +18,8 @@ public class DateTimeUtils {
         return dateTime.toString();
     }
 
-    public static OffsetDateTime nowToOffsetDateTime() {
-        return OffsetDateTime.now().withOffsetSameInstant(ZoneOffset.UTC);
+    public static LocalDateTime nowToLocalDateTime() {
+        return LocalDateTime.now(ZoneOffset.UTC);
     }
 
     public static OffsetDateTime toOffsetDateTime(String dateTimeStr) {

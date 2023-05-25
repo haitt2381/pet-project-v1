@@ -3,15 +3,20 @@ package com.example.petproject.common.entity;
 import com.example.petproject.common.util.DateTimeUtils;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Type;
+import org.keycloak.KeycloakPrincipal;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
@@ -20,15 +25,17 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Version;
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Data
-@MappedSuperclass
+@Setter
+@Getter
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(onlyExplicitlyIncluded = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@SuperBuilder
+@MappedSuperclass
 public abstract class AuditEntity {
 
     @Id
@@ -50,23 +57,38 @@ public abstract class AuditEntity {
 
     @Column()
     @CreatedDate
-    OffsetDateTime createdAt;
+    LocalDateTime createdAt;
 
     @Column()
     @LastModifiedDate
-    OffsetDateTime modifiedAt;
+    LocalDateTime modifiedAt;
 
     @PrePersist
     void preInsert() {
-        this.createdAt = DateTimeUtils.nowToOffsetDateTime();
+        String createdByUser = getUsernameOfAuthenticatedUser();
+        this.createdAt = DateTimeUtils.nowToLocalDateTime();
         this.modifiedAt = createdAt;
-//        this.createdBy = Objects.nonNull(ProfileLocal.getUserId()) ? ProfileLocal.getUserId() : null;
+        this.createdBy = createdByUser;
+        this.modifiedBy = createdByUser;
         this.version = 1L;
     }
 
     @PreUpdate
     void preUpdate() {
-        this.modifiedAt = DateTimeUtils.nowToOffsetDateTime();
-//        this.modifiedBy = Objects.nonNull(ProfileLocal.getUserId()) ? ProfileLocal.getUserId() : null;
+        String modifiedByUser = getUsernameOfAuthenticatedUser();
+        this.modifiedAt = DateTimeUtils.nowToLocalDateTime();
+        this.modifiedBy = modifiedByUser;
+    }
+
+    private String getUsernameOfAuthenticatedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return null;
+        }
+
+        KeycloakPrincipal principal = (KeycloakPrincipal) authentication.getPrincipal();
+
+        return principal.getKeycloakSecurityContext().getToken().getPreferredUsername();
     }
 }

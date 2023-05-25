@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -17,8 +17,8 @@ import java.time.OffsetDateTime;
 @Builder
 public class UserData {
     String id;
-    OffsetDateTime createdAt;
-    OffsetDateTime modifiedAt;
+    LocalDate createdAt;
+    LocalDate modifiedAt;
     String firstName;
     String lastName;
     String username;

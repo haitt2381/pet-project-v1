@@ -1,6 +1,7 @@
 package com.example.petproject.specification;
 
 import com.example.petproject.common.specification.BaseSpecification;
+import com.example.petproject.common.util.CommonUtils;
 import com.example.petproject.constant.Role;
 import com.example.petproject.dto.request.GetUsersRequest;
 import com.example.petproject.entity.User;
@@ -16,6 +17,10 @@ public abstract class UserSpecification extends BaseSpecification {
 
     public static Specification<User> buildSpecification(GetUsersRequest request) {
         Specification<User> specification = containsKeyword(request.getKeyword());
+
+        if (Boolean.TRUE.equals(request.getIsExcludeCurrentUserLogged())) {
+            specification = specification.and(excludeUserLogged());
+        }
 
         if (!CollectionUtils.isEmpty(request.getRole())) {
             specification = specification.and(hasRole(request.getRole()));
@@ -50,6 +55,11 @@ public abstract class UserSpecification extends BaseSpecification {
 
     public static Specification<User> isActive(boolean isActive) {
         return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("isActive"), isActive);
+    }
+
+    public static Specification<User> excludeUserLogged() {
+        String currentUsernameLogged = CommonUtils.getCurrentUsernameLogged();
+        return (root, query, criteriaBuilder) -> criteriaBuilder.notEqual(root.get("username"), currentUsernameLogged);
     }
 
 

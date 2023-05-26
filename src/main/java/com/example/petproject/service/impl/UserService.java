@@ -63,20 +63,14 @@ public class UserService implements IUserService {
         return GetUserResponse.builder().data(userDto).build();
     }
 
-    @Override
-    public UserData getUserByEmail(String email) {
-        Optional<User> user = userRepository.findByEmail(email);
-        return user.map(userMapper::toUserData).orElse(null);
-    }
-
-    private User getUserByEmailOrUsername(String emailOrUsername) {
+    public UserData getUserByEmailOrUsername(String emailOrUsername) {
         Optional<User> user = userRepository.findByEmailOrUsername(emailOrUsername, emailOrUsername);
 
         if (user.isEmpty()) {
             log.info("[UserService] Not found user: {}", emailOrUsername);
             throw new AppRuntimeException(AppErrorInfo.USER_NOT_FOUND, HttpStatus.NOT_FOUND);
         }
-        return user.get();
+        return userMapper.toUserData(user.get());
     }
 
     private User getUserById(UUID userId) {
@@ -130,8 +124,9 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void isActiveUser(String emailOrUsername) {
-        User user = getUserByEmailOrUsername(emailOrUsername);
+    public void isActiveUser(String id) {
+        UUID uuid = CommonUtils.isValidUUID(id);
+        User user = this.getUserById(uuid);
 
         if (Boolean.FALSE.equals(user.getIsActive())) {
             throw new AppRuntimeException(AppErrorInfo.USER_NOT_ACTIVE, HttpStatus.FORBIDDEN);
@@ -139,9 +134,9 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public IdResponse activateAndDeactivateUser(String emailOrUsername, boolean isActive) {
-
-        User user = getUserByEmailOrUsername(emailOrUsername);
+    public IdResponse activateAndDeactivateUser(String id, boolean isActive) {
+        UUID uuid = CommonUtils.isValidUUID(id);
+        User user = getUserById(uuid);
         user.setIsActive(isActive);
 
         UpdateUserRequest updateUserRequest = UpdateUserRequest.builder().isActive(isActive).build();

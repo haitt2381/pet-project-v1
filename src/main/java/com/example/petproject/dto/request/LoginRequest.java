@@ -10,7 +10,7 @@ public class LoginRequest {
 
     @ApiModelProperty(example = "admin", required = true)
     @NotBlank
-    String username;
+    String emailOrUsername;
 
     @ApiModelProperty(example = "admin", required = true)
     @NotBlank

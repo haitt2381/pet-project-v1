@@ -6,7 +6,10 @@ import com.example.petproject.common.exception.AppErrorInfo;
 import com.example.petproject.common.exception.AppRuntimeException;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
+import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
+import org.keycloak.representations.AccessToken;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.UUID;
 
@@ -31,5 +34,12 @@ public class CommonUtils {
         } catch (Exception ex) {
             throw new AppRuntimeException(AppErrorInfo.UUID_INVALID);
         }
+    }
+
+    public static String getCurrentUsernameLogged() {
+        KeycloakAuthenticationToken keycloakAuthenticationToken = (KeycloakAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        ;
+        AccessToken accessToken = keycloakAuthenticationToken.getAccount().getKeycloakSecurityContext().getToken();
+        return accessToken.getPreferredUsername();
     }
 }

@@ -2,7 +2,11 @@ package com.example.petproject.dto.request;
 
 import com.example.petproject.common.dto.BaseRequest;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 
@@ -20,4 +24,5 @@ public class GetUsersRequest extends BaseRequest {
     List<String> role;
     Boolean isActive;
     Boolean isDeleted;
+    Boolean isExcludeCurrentUserLogged;
 }

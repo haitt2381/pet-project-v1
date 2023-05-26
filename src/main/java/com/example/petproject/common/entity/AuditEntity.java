@@ -1,5 +1,6 @@
 package com.example.petproject.common.entity;
 
+import com.example.petproject.common.util.CommonUtils;
 import com.example.petproject.common.util.DateTimeUtils;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -10,13 +11,10 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Type;
-import org.keycloak.KeycloakPrincipal;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
@@ -65,7 +63,7 @@ public abstract class AuditEntity {
 
     @PrePersist
     void preInsert() {
-        String createdByUser = getUsernameOfAuthenticatedUser();
+        String createdByUser = CommonUtils.getCurrentUsernameLogged();
         this.createdAt = DateTimeUtils.nowToLocalDateTime();
         this.modifiedAt = createdAt;
         this.createdBy = createdByUser;
@@ -75,20 +73,8 @@ public abstract class AuditEntity {
 
     @PreUpdate
     void preUpdate() {
-        String modifiedByUser = getUsernameOfAuthenticatedUser();
+        String modifiedByUser = CommonUtils.getCurrentUsernameLogged();
         this.modifiedAt = DateTimeUtils.nowToLocalDateTime();
         this.modifiedBy = modifiedByUser;
-    }
-
-    private String getUsernameOfAuthenticatedUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return null;
-        }
-
-        KeycloakPrincipal principal = (KeycloakPrincipal) authentication.getPrincipal();
-
-        return principal.getKeycloakSecurityContext().getToken().getPreferredUsername();
     }
 }

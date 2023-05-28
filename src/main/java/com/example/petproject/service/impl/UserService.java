@@ -157,4 +157,12 @@ public class UserService implements IUserService {
 
         return CommonUtils.buildIdResponse(userSaved.getId());
     }
+
+    @Override
+    public IdResponse deleteUser(String id) {
+        UUID uuid = CommonUtils.isValidUUID(id);
+        User user = getUserById(uuid);
+        userRepository.delete(user);
+        return CommonUtils.buildIdResponse(uuid);
+    }
 }

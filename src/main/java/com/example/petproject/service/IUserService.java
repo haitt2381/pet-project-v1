@@ -25,4 +25,6 @@ public interface IUserService {
     IdResponse activateAndDeactivateUser(String emailOrUsername, boolean isActive);
 
     IdResponse updateUser(UpdateUserRequest request);
+
+    IdResponse deleteUser(String id);
 }

@@ -9,7 +9,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Pattern;
 import java.util.UUID;
@@ -24,7 +23,7 @@ public class UpdateUserRequest {
 
     @ApiModelProperty(example = "6e578f8d-5edd-4db1-826c-cf2597a5fcb2", required = true)
 //    @NotBlank
-    @Length(min = 36, max = 36)
+//    @Length(min = 36, max = 36)
     UUID id;
 
     // RFC 5322 for Email Validation

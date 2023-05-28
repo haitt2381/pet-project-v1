@@ -45,7 +45,7 @@ public class UserController {
     }
 
     @ApiOperation(value = "Create user")
-    @RolesAllowed("ROLE_admin")
+//    @RolesAllowed("ROLE_admin")
     @PostMapping(value = "/create")
     public IdResponse createUser(@Valid @RequestBody CreateUserRequest request) {
         return userService.createUser(request);
@@ -53,16 +53,16 @@ public class UserController {
 
     @ApiOperation(value = "Activate user")
     @RolesAllowed("ROLE_admin")
-    @GetMapping(value = "/activate/{emailOrUsername}")
-    public IdResponse activateUser(@PathVariable String emailOrUsername) {
-        return userService.activateAndDeactivateUser(emailOrUsername, true);
+    @GetMapping(value = "/activate/{id}")
+    public IdResponse activateUser(@PathVariable String id) {
+        return userService.activateAndDeactivateUser(id, true);
     }
 
     @ApiOperation(value = "Deactivate user")
     @RolesAllowed("ROLE_admin")
-    @GetMapping(value = "/deactivate/{emailOrUsername}")
-    public IdResponse deactivateUser(@PathVariable String emailOrUsername) {
-        return userService.activateAndDeactivateUser(emailOrUsername, false);
+    @GetMapping(value = "/deactivate/{id}")
+    public IdResponse deactivateUser(@PathVariable String id) {
+        return userService.activateAndDeactivateUser(id, false);
     }
 
     @ApiOperation(value = "Update user")
@@ -70,6 +70,11 @@ public class UserController {
     @PutMapping(value = "/update")
     public IdResponse updateUser(@Valid @RequestBody UpdateUserRequest request) {
         return userService.updateUser(request);
+    }
+
+    @DeleteMapping("/{id}")
+    public IdResponse deleteUser(@PathVariable String id) {
+        return userService.deleteUser(id);
     }
 
 }

@@ -1,15 +1,15 @@
 package com.example.petproject.repository;
 
 import com.example.petproject.entity.User;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.support.JpaRepositoryImplementation;
 
+import java.lang.annotation.Native;
 import java.util.Optional;
 import java.util.UUID;
 
 public interface UserRepository extends JpaRepositoryImplementation<User, UUID> {
-
-    Optional<User> findByEmail(String email);
 
     boolean existsByEmail(String email);
 
@@ -19,6 +19,8 @@ public interface UserRepository extends JpaRepositoryImplementation<User, UUID> 
 
     Optional<User> findByEmailOrUsername(String email, String username);
 
-//    @Query("UPDATE User set isActive = ?")
-//    User updateIsActive();
+    @Modifying
+    @Query(value = "DELETE FROM app_user WHERE id = ?1 ", nativeQuery = true)
+    void hardDelete(String id);
+
 }

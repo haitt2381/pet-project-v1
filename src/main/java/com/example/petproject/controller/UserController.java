@@ -53,14 +53,14 @@ public class UserController {
 
     @ApiOperation(value = "Activate user")
     @RolesAllowed("ROLE_admin")
-    @GetMapping(value = "/activate/{id}")
+    @PatchMapping(value = "/activate/{id}")
     public IdResponse activateUser(@PathVariable String id) {
         return userService.activateAndDeactivateUser(id, true);
     }
 
     @ApiOperation(value = "Deactivate user")
     @RolesAllowed("ROLE_admin")
-    @GetMapping(value = "/deactivate/{id}")
+    @PatchMapping(value = "/deactivate/{id}")
     public IdResponse deactivateUser(@PathVariable String id) {
         return userService.activateAndDeactivateUser(id, false);
     }
@@ -72,9 +72,23 @@ public class UserController {
         return userService.updateUser(request);
     }
 
+    @ApiOperation(value = "Soft delete user")
+    @RolesAllowed("ROLE_admin")
     @DeleteMapping("/{id}")
     public IdResponse deleteUser(@PathVariable String id) {
         return userService.deleteUser(id);
+    }
+
+    @ApiOperation(value = "Hard delete user")
+    @DeleteMapping("/hard-delete/{id}")
+    public IdResponse hardDeleteUser(@PathVariable String id) {
+        return userService.hardDeleteUser(id);
+    }
+
+    @ApiOperation(value = "Restore user from recycle bin")
+    @PatchMapping("/restore/{id}")
+    public IdResponse restoreUser(@PathVariable String id) {
+        return userService.restoreUser(id);
     }
 
 }

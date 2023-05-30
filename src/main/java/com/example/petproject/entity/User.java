@@ -2,11 +2,14 @@ package com.example.petproject.entity;
 
 import com.example.petproject.common.entity.AuditEntity;
 import com.example.petproject.constant.Role;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,7 +25,6 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "app_user")
 @SQLDelete(sql = "Update app_user SET is_deleted = true, modified_at = now(), version = version + 1 WHERE id = ? and version = ?")
-@Where(clause = "is_deleted = false")
 @DynamicUpdate
 public class User extends AuditEntity {
 

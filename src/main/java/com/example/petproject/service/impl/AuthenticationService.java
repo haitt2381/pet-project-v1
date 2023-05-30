@@ -41,8 +41,6 @@ public class AuthenticationService implements IAuthenticationService {
 
         try (Keycloak keycloak =
                      kcProvider.newKeycloakBuilderWithPasswordCredentials(request.getEmailOrUsername(), request.getPassword())) {
-            this.userService.getUserByEmailOrUsername(request.getEmailOrUsername());
-
             return keycloak.tokenManager().getAccessToken();
         } catch (NotAuthorizedException ex) {
             log.info("[AuthService] Invalid account", ex);

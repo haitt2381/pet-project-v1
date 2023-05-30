@@ -17,6 +17,7 @@ public abstract class UserSpecification extends BaseSpecification {
 
     public static Specification<User> buildSpecification(GetUsersRequest request) {
         Specification<User> specification = containsKeyword(request.getKeyword());
+        specification = specification.and(isDeleted(request.getIsDeleted()));
 
         if (Boolean.TRUE.equals(request.getIsExcludeCurrentUserLogged())) {
             specification = specification.and(excludeUserLogged());
@@ -62,5 +63,11 @@ public abstract class UserSpecification extends BaseSpecification {
         return (root, query, criteriaBuilder) -> criteriaBuilder.notEqual(root.get("username"), currentUsernameLogged);
     }
 
+    public static Specification<User> isDeleted(Boolean isDeleted) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("isDeleted"), Objects.isNull(isDeleted) ? Boolean.FALSE : isDeleted);
+    }
 
+//    public static String buildNativeQuery (GetUsersRequest request, ) {
+//
+//    }
 }

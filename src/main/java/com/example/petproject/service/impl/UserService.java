@@ -21,12 +21,16 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
@@ -35,6 +39,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Service
+@Transactional
 public class UserService implements IUserService {
 
     final UserRepository userRepository;
@@ -66,7 +71,7 @@ public class UserService implements IUserService {
     public UserData getUserByEmailOrUsername(String emailOrUsername) {
         Optional<User> user = userRepository.findByEmailOrUsername(emailOrUsername, emailOrUsername);
 
-        if (user.isEmpty()) {
+        if (user.isEmpty() || Boolean.TRUE.equals(user.get().getIsDeleted())) {
             log.info("[UserService] Not found user: {}", emailOrUsername);
             throw new AppRuntimeException(AppErrorInfo.USER_NOT_FOUND, HttpStatus.NOT_FOUND);
         }
@@ -76,7 +81,17 @@ public class UserService implements IUserService {
     private User getUserById(UUID userId) {
         Optional<User> user = userRepository.findById(userId);
 
-        if (user.isEmpty()) {
+        if (user.isEmpty() || Boolean.TRUE.equals(user.get().getIsDeleted())) {
+            log.info("[UserService] Not found user: {}", userId);
+            throw new AppRuntimeException(AppErrorInfo.USER_NOT_FOUND, HttpStatus.NOT_FOUND);
+        }
+        return user.get();
+    }
+
+    private User getUserByIdDeleted(UUID userId) {
+        Optional<User> user = userRepository.findById(userId);
+
+        if (user.isEmpty() || Boolean.FALSE.equals(user.get().getIsDeleted())) {
             log.info("[UserService] Not found user: {}", userId);
             throw new AppRuntimeException(AppErrorInfo.USER_NOT_FOUND, HttpStatus.NOT_FOUND);
         }
@@ -110,16 +125,21 @@ public class UserService implements IUserService {
 
     @Override
     public void checkUserExisted(String email, String username, String phoneNumber) {
+        List<AppErrorInfo> errors = new ArrayList<>();
         if (userRepository.existsByEmail(email)) {
-            throw new AppRuntimeException(AppErrorInfo.EMAIL_ALREADY_EXISTS, HttpStatus.CONFLICT);
+            errors.add(AppErrorInfo.EMAIL_ALREADY_EXISTS);
         }
 
         if (userRepository.existsByUsername(username)) {
-            throw new AppRuntimeException(AppErrorInfo.USERNAME_ALREADY_EXISTS, HttpStatus.CONFLICT);
+            errors.add(AppErrorInfo.USERNAME_ALREADY_EXISTS);
         }
 
         if (userRepository.existsByPhoneNumber(phoneNumber)) {
-            throw new AppRuntimeException(AppErrorInfo.PHONE_NUMBER_ALREADY_EXISTS, HttpStatus.CONFLICT);
+            errors.add(AppErrorInfo.PHONE_NUMBER_ALREADY_EXISTS);
+        }
+
+        if (CollectionUtils.isNotEmpty(errors)) {
+            throw new AppRuntimeException(errors, HttpStatus.CONFLICT);
         }
     }
 
@@ -164,5 +184,23 @@ public class UserService implements IUserService {
         User user = getUserById(uuid);
         userRepository.delete(user);
         return CommonUtils.buildIdResponse(uuid);
+    }
+
+    @Override
+    public IdResponse hardDeleteUser(String id) {
+        UUID uuid = CommonUtils.isValidUUID(id);
+        User user = getUserByIdDeleted(uuid);
+        userRepository.hardDelete(id);
+        kcService.deleteKeycloakUserById(user.getUserKeycloakId());
+        return CommonUtils.buildIdResponse(uuid);
+    }
+
+    @Override
+    public IdResponse restoreUser(String id) {
+        UUID uuid = CommonUtils.isValidUUID(id);
+        User user = getUserByIdDeleted(uuid);
+        user.setIsDeleted(Boolean.FALSE);
+        User userSaved = userRepository.save(user);
+        return CommonUtils.buildIdResponse(userSaved.getId());
     }
 }

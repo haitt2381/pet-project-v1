@@ -27,4 +27,8 @@ public interface IUserService {
     IdResponse updateUser(UpdateUserRequest request);
 
     IdResponse deleteUser(String id);
+
+    IdResponse hardDeleteUser(String id);
+
+    IdResponse restoreUser(String id);
 }

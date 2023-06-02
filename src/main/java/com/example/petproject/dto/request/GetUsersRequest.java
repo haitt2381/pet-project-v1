@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
@@ -25,4 +26,6 @@ public class GetUsersRequest extends BaseRequest {
     Boolean isActive;
     Boolean isDeleted;
     Boolean isExcludeCurrentUserLogged;
+    LocalDateTime fromDate;
+    LocalDateTime toDate;
 }

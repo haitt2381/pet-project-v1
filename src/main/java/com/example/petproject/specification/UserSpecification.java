@@ -8,6 +8,7 @@ import com.example.petproject.entity.User;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.CollectionUtils;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -29,6 +30,14 @@ public abstract class UserSpecification extends BaseSpecification {
 
         if (Objects.nonNull(request.getIsActive())) {
             specification = specification.and(isActive(request.getIsActive()));
+        }
+
+        if(Objects.nonNull(request.getFromDate())) {
+            specification = specification.and(fromDate(request.getFromDate()));
+        }
+
+        if(Objects.nonNull(request.getToDate())) {
+            specification = specification.and(toDate(request.getToDate()));
         }
 
         return specification;
@@ -67,7 +76,11 @@ public abstract class UserSpecification extends BaseSpecification {
         return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("isDeleted"), Objects.isNull(isDeleted) ? Boolean.FALSE : isDeleted);
     }
 
-//    public static String buildNativeQuery (GetUsersRequest request, ) {
-//
-//    }
+    public static Specification<User> fromDate(LocalDateTime fromDate) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.greaterThanOrEqualTo(root.get("modifiedAt"), fromDate);
+    }
+
+    public static Specification<User> toDate(LocalDateTime fromDate) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get("modifiedAt"), fromDate.plusDays(1));
+    }
 }
